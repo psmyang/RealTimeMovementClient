@@ -13,17 +13,13 @@ static public class NetworkedClientProcessing
         string[] csv = msg.Split(',');
         int signifier = int.Parse(csv[0]);
 
-        // if (signifier == ServerToClientSignifiers.asd)
-        // {
+        if (signifier == ServerToClientSignifiers.VelocityAndPosition)
+        {
+            Vector2 vel = new Vector2(float.Parse(csv[1]), float.Parse(csv[2]));
+            Vector2 pos = new Vector2(float.Parse(csv[3]), float.Parse(csv[4]));
 
-        // }
-        // else if (signifier == ServerToClientSignifiers.asd)
-        // {
-
-        // }
-
-        //gameLogic.DoSomething();
-
+            gameLogic.GetComponent<GameLogic>().SetVelocityAndPosition(vel, pos);
+        }
     }
 
     static public void SendMessageToServer(string msg)
@@ -81,12 +77,25 @@ static public class NetworkedClientProcessing
 #region Protocol Signifiers
 static public class ClientToServerSignifiers
 {
-    public const int asd = 1;
+    public const int KeyboardInputUpdate = 1;
 }
 
 static public class ServerToClientSignifiers
 {
-    public const int asd = 1;
+    public const int VelocityAndPosition = 1;
+}    
+static public class KeyboardInputDirections
+{
+    public const int Up= 1;
+    public const int Down = 2;
+    public const int Left = 3;
+    public const int Right= 4;
+
+    public const int UpRight = 5;
+    public const int UpLeft = 6;
+    public const int DownRight = 7;
+    public const int DownLeft = 8;
+    public const int NoPress = 100;
 }
 
 #endregion

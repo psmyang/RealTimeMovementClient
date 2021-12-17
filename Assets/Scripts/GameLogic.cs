@@ -8,11 +8,11 @@ public class GameLogic : MonoBehaviour
 
     Vector2 characterPositionInPercent;
     Vector2 characterVelocityInPercent;
-    const float CharacterSpeed = 0.25f;
-    const float HalfCharacterSpeed = 0.125f;
 
     void Start()
     {
+        //Debug.Log(HalfCharacterSpeed);
+
         NetworkedClientProcessing.SetGameLogic(this);
 
         Sprite circleTexture = Resources.Load<Sprite>("Circle");
@@ -28,36 +28,41 @@ public class GameLogic : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D)
             || Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D))
         {
-            characterVelocityInPercent = Vector2.zero;
 
             if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
             {
-                characterVelocityInPercent.x = HalfCharacterSpeed;
-                characterVelocityInPercent.y = HalfCharacterSpeed;
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.UpRight);
             }
             else if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A))
             {
-                characterVelocityInPercent.x = -HalfCharacterSpeed;
-                characterVelocityInPercent.y = HalfCharacterSpeed;
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.UpLeft);
             }
             else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D))
             {
-                characterVelocityInPercent.x = HalfCharacterSpeed;
-                characterVelocityInPercent.y = -HalfCharacterSpeed;
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.DownRight);
             }
             else if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A))
             {
-                characterVelocityInPercent.x = -HalfCharacterSpeed;
-                characterVelocityInPercent.y = -HalfCharacterSpeed;
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.DownLeft);
             }
             else if (Input.GetKey(KeyCode.D))
-                characterVelocityInPercent.x = CharacterSpeed;
+            {
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.Right);
+            }
             else if (Input.GetKey(KeyCode.A))
-                characterVelocityInPercent.x = -CharacterSpeed;
+            {
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.Left);
+            }
             else if (Input.GetKey(KeyCode.W))
-                characterVelocityInPercent.y = CharacterSpeed;
+            {
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.Up);
+            }
             else if (Input.GetKey(KeyCode.S))
-                characterVelocityInPercent.y = -CharacterSpeed;
+            {
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.Down);
+            }
+            else
+                NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.KeyboardInputUpdate + "," + KeyboardInputDirections.NoPress);
         }
 
         characterPositionInPercent += (characterVelocityInPercent * Time.deltaTime);
@@ -69,5 +74,39 @@ public class GameLogic : MonoBehaviour
 
     }
 
+    public void SetVelocityAndPosition(Vector2 vel, Vector2 pos)
+    {
+        characterVelocityInPercent = vel;
+        characterPositionInPercent = pos;
+    }
+
 }
 
+
+//We want to do input on the client and send ot server!
+//
+//update position on the server?! or on client??!?!?!?!?
+//
+//manage player position on server (collision detection!)
+//
+//
+//
+//is there any case for passing a location for the player to be at? 
+
+//
+//Add second charactrer
+//
+//
+//
+//so shouldnt the player handle its movement in case of connectivity issues?  and have the server correct?
+//
+///player accounts 
+//game rooms or something something
+//
+//
+//
+//
+//
+//
+//Debate if input signifier solution is ideal!!!
+//
